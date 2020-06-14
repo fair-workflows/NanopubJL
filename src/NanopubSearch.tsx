@@ -70,7 +70,7 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
         console.log('User selected:', uri);
 
         if (this.state.source === 'nanopub') {
-            const code = 'np = Nanopub.fetch(\'' + uri + '\')\nprint(np)';
+            const code = 'from fairworkflows import Nanopub\nnp = Nanopub.fetch(\'' + uri + '\')\nprint(np)';
             this.props.injectCode(code);
         }
     }
