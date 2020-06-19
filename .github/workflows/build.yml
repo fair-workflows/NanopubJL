@@ -1,0 +1,39 @@
+name: Build
+
+on:
+  push:
+    branches: '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Install node
+      uses: actions/setup-node@v1
+      with:
+       node-version: '10.x'
+    - name: Install Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.7'
+        architecture: 'x64'
+    - name: Install dependencies
+      run: |
+        python -m pip install wheel
+        python -m pip install jupyterlab
+        python -m pip install git+git://github.com/fair-workflows/FAIRWorkbench@add_nanopub_search_things_grlc 
+    - name: Build the extension
+      run: |
+        jlpm
+        jlpm run eslint:check
+
+        pip install .
+        jupyter lab build
+        jupyter serverextension list 1>serverextensions 2>&1
+        cat serverextensions | grep "NanopubJL.*OK"
+        jupyter labextension list 1>labextensions 2>&1
+        cat labextensions | grep "NanopubJL.*OK"
+
+        python -m jupyterlab.browser_check
