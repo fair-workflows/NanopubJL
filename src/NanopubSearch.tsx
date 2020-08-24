@@ -41,6 +41,7 @@ interface INanopubSearchState {
     source: 'nanopub';
     searchtext: string;
     results: any;
+    loading: boolean;
 }
 
 
@@ -56,6 +57,7 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
         this.state = {
             source: 'nanopub',
             searchtext: '',
+            loading: false, 
             results: []
         };
         
@@ -110,12 +112,16 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
             console.error('Source is not recognised:\n', this.state.source);
             return;
         }
+
+        this.setState({loading: true});
         requestAPI<any>(endpoint, queryParams)
             .then(data => {
                 this.setState({results: data});
+                this.setState({loading: false});
             })
             .catch(reason => {
                 console.error('Search failed:\n', reason);
+                this.setState({loading: false});
             });
     }
 
@@ -126,11 +132,17 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
     render(): React.ReactElement {
         console.log('Rendering NanopubSearch component')
 
-        let searchresults = [];
-        if (this.state.source === 'nanopub') {
-            searchresults = this.state.results.map( (c: any) => (
-                <SearchResult key={c.id} uri={c.np} description={c.description} date={c.date} onClick={this.onResultClick} />
-            ));
+        // Display the results, or a "Loading..." message
+        let searcharea = (<span className="jp-fairwidget-busy">Loading...</span>);
+        if (this.state.loading === false) {
+            let searchresults = [];
+            if (this.state.source === 'nanopub') {
+                searchresults = this.state.results.map( (c: any) => (
+                    <SearchResult key={c.id} uri={c.np} description={c.description} date={c.date} onClick={this.onResultClick} />
+                ));
+            }
+
+            searcharea = (<ul className="jp-DirListing-content">{searchresults}</ul>);
         }
 
         return (
@@ -153,9 +165,7 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
                     </label>
                 </div>
                 <div className="p-Widget jp-DirListing">
-                    <ul className="jp-DirListing-content">
-                        {searchresults}
-                    </ul>
+                    {searcharea}
                 </div>
             </div>
         );
