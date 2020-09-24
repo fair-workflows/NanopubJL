@@ -64,7 +64,7 @@ setup_args = dict(
     platforms="Linux, Mac OS X, Windows",
     keywords=["Jupyter", "JupyterLab"],
     classifiers=[
-        "License :: OSI Approved :: BSD License",
+        "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
@@ -74,7 +74,6 @@ setup_args = dict(
         "Framework :: Jupyter",
     ],
 )
-
 
 if __name__ == "__main__":
     setuptools.setup(**setup_args)
