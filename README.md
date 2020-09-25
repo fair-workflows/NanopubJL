@@ -4,6 +4,8 @@
 
 A Jupyterlab extension for searching and publishing Nanopublications from a python notebook.
 
+![screenshot](https://github.com/fair-workflows/NanopubJL/blob/master/nanopubJLexample.gif "Screenshot")
+
 This extension is composed of a Python package named `NanopubJL`
 for the server extension and a NPM package named `NanopubJL`
 for the frontend extension.

@@ -16,16 +16,20 @@ interface ISearchResultProps {
  * function specified via the ISearchResultProps.
  */
 export class SearchResult extends React.Component<ISearchResultProps, {}> {
+
     onClick = (): void => {
         this.props.onClick(this.props.uri);
     }
+
     render(): React.ReactElement {
         return (
             <li key={this.props.uri} title={this.props.uri}>
-                <span className='jp-DirListing-item' onClick={this.onClick}>
-                    <p>{this.props.description}</p>
-                    <p>{this.props.date}</p>
-                </span>
+                <div className='jp-DirListing-item' onClick={this.onClick}>
+                    <div>
+                        <p>{this.props.description}</p>
+                        <p>{this.props.date}</p>
+                    </div>
+                </div>
             </li>
         );
     }
@@ -38,8 +42,12 @@ interface INanopubSearchProps {
 
 /** State of the NanopubSearch component */
 interface INanopubSearchState {
-    source: 'nanopub';
+    searchtype: 'text' | 'pattern' | 'things';
     searchtext: string;
+    searchthing: string;
+    searchsubj: string;
+    searchpred: string;
+    searchobj: string;
     results: any;
     loading: boolean;
 }
@@ -55,8 +63,12 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
     constructor(props: INanopubSearchProps) {
         super(props);
         this.state = {
-            source: 'nanopub',
+            searchtype: 'text',
             searchtext: '',
+            searchthing: '',
+            searchsubj: '',
+            searchpred: '',
+            searchobj: '',
             loading: false, 
             results: []
         };
@@ -71,28 +83,70 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
     onResultClick = (uri: string): void => {
         console.log('User selected:', uri);
 
-        if (this.state.source === 'nanopub') {
-            const code = 'from fairworkflows import Nanopub\nnp = Nanopub.fetch(\'' + uri + '\')\nprint(np)';
-            this.props.injectCode(code);
-        }
+        const code = 'from fairworkflows import Nanopub\nnp = Nanopub.fetch(\'' + uri + '\')\nprint(np)';
+        this.props.injectCode(code);
     }
 
     /**
-     * Called when the search entry input changes. The searching is debounced,
+     * Called when the search text entry input changes. The searching is debounced,
      * triggering after 500ms of inactivity, following this change. This is to
      * reduce the number of search requests going out, while maintaining a 
      * 'real time' feel to the search.
      */
-    onSearchEntry = (event: any): void => {
+    onSearchTextEntry = (event: any): void => {
         this.setState({searchtext: event.target.value});
         this.debounced_search();
     }
 
     /**
-     * Called when the search source is changed
+     * Called when the search 'thing' entry input changes. The searching is debounced,
+     * triggering after 500ms of inactivity, following this change. This is to
+     * reduce the number of search requests going out, while maintaining a 
+     * 'real time' feel to the search.
      */
-    onSourceChange = (event: any): void => {
-        this.setState({ source: event.target.value, results: [], searchtext: '' });
+    onSearchThingEntry = (event: any): void => {
+        this.setState({searchthing: event.target.value});
+        this.debounced_search();
+    }
+
+    /**
+     * Called when the search subject entry input changes. The searching is debounced,
+     * triggering after 500ms of inactivity, following this change. This is to
+     * reduce the number of search requests going out, while maintaining a 
+     * 'real time' feel to the search.
+     */
+    onSearchSubjEntry = (event: any): void => {
+        this.setState({searchsubj: event.target.value});
+        this.debounced_search();
+    }
+
+    /**
+     * Called when the search object entry input changes. The searching is debounced,
+     * triggering after 500ms of inactivity, following this change. This is to
+     * reduce the number of search requests going out, while maintaining a 
+     * 'real time' feel to the search.
+     */
+    onSearchObjEntry = (event: any): void => {
+        this.setState({searchobj: event.target.value});
+        this.debounced_search();
+    }
+
+    /**
+     * Called when the search predicate entry input changes. The searching is debounced,
+     * triggering after 500ms of inactivity, following this change. This is to
+     * reduce the number of search requests going out, while maintaining a 
+     * 'real time' feel to the search.
+     */
+    onSearchPredEntry = (event: any): void => {
+        this.setState({searchpred: event.target.value});
+        this.debounced_search();
+    }
+
+    /**
+     * Called when the search type is changed
+     */
+    onSearchtypeChange = (event: any): void => {
+        this.setState({ searchtype: event.target.value, results: [], searchtext: '' });
     }
 
     /**
@@ -105,11 +159,16 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
         let endpoint = '';
         let queryParams = {};
 
-        if (this.state.source === 'nanopub') {
-            endpoint = 'nanosearch';
+        endpoint = 'nanosearch';
+
+        if (this.state.searchtype === 'text') {
             queryParams = {type_of_search: 'text', search_str: this.state.searchtext};
+        } else if (this.state.searchtype === 'pattern') {
+            queryParams = {type_of_search: 'pattern', subj: this.state.searchsubj, pred: this.state.searchpred, obj: this.state.searchobj};
+        } else if (this.state.searchtype === 'things') {
+            queryParams = {type_of_search: 'things', thing_type: this.state.searchthing, searchterm: ' '};
         } else {
-            console.error('Source is not recognised:\n', this.state.source);
+            console.error('Search type not recognised:\n', this.state.searchtype);
             return;
         }
 
@@ -136,13 +195,46 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
         let searcharea = (<span className="jp-fairwidget-busy">Loading...</span>);
         if (this.state.loading === false) {
             let searchresults = [];
-            if (this.state.source === 'nanopub') {
+
+            if (this.state.results.length > 0) {
                 searchresults = this.state.results.map( (c: any) => (
                     <SearchResult key={c.id} uri={c.np} description={c.description} date={c.date} onClick={this.onResultClick} />
                 ));
+                searcharea = (<ul className="jp-DirListing-content">{searchresults}</ul>);
+            } else {
+                searcharea = (<ul className="jp-DirListing-content"><span className='jp-DirListing-item'><p>No results</p></span></ul>);
             }
 
-            searcharea = (<ul className="jp-DirListing-content">{searchresults}</ul>);
+        }
+
+        let searchentry = null;
+        if (this.state.searchtype === 'text') {
+            searchentry = (
+                <div className="p-Widget jp-DirListing">
+                    Text
+                    <input type="search" id="searchtextentry" name="searchtextentry" onChange={this.onSearchTextEntry} value={this.state.searchtext} />
+                </div>
+            );
+        } else if (this.state.searchtype === 'pattern') {
+            searchentry = (
+                <div className="p-Widget jp-DirListing">
+                    Subject
+                    <input type="search" id="searchsubjentry" name="searchsubjentry" onChange={this.onSearchSubjEntry} value={this.state.searchsubj} />
+                    Predicate
+                    <input type="search" id="searchpredentry" name="searchpredentry" onChange={this.onSearchPredEntry} value={this.state.searchpred} />
+                    Object
+                    <input type="search" id="searchobjentry" name="searchobjentry" onChange={this.onSearchObjEntry} value={this.state.searchobj} />
+                </div>
+            );
+        } else if (this.state.searchtype === 'things') {
+            searchentry = (
+                <div className="p-Widget jp-DirListing">
+                    Thing
+                    <input type="search" id="searchthingentry" name="searchthingentry" onChange={this.onSearchThingEntry} value={this.state.searchthing} />
+                </div>
+            );
+        } else {
+            console.error('Search type not recognised:\n', this.state.searchtype);
         }
 
         return (
@@ -150,20 +242,20 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
                 <div className="jp-KeySelector jp-NotebookTools-tool p-Widget lm-Widget" >
                     <header className="jp-RunningSessions-sectionHeader"><h2>Nanopub Search</h2></header>
                     <label>
-                        Source
+                        Search
                         <div className="jp-select-wrapper jp-mod-focused">
-                            <select className='jp-mod-styled' value={this.state.source} onChange={this.onSourceChange}>
-                                <option key='select_nanopub' value='nanopub'>Nanopub</option>
+                            <select className='jp-mod-styled' value={this.state.searchtype} onChange={this.onSearchtypeChange}>
+                                <option key='select_text' value='text'>Text</option>
+                                <option key='select_pattern' value='pattern'>Pattern</option>
+                                <option key='select_things' value='things'>Things</option>
                             </select>
                         </div>
                     </label>
                     <label>
-                        Search
-                        <div className="jp-select-wrapper">
-                            <input type="search" id="searchentry" name="searchentry" onChange={this.onSearchEntry} value={this.state.searchtext} />
-                        </div>
+                        {searchentry}
                     </label>
                 </div>
+                <br/>
                 <div className="p-Widget jp-DirListing">
                     {searcharea}
                 </div>
