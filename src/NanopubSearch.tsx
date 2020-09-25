@@ -192,9 +192,13 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
         if (this.state.loading === false) {
             let searchresults = [];
 
-            searchresults = this.state.results.map( (c: any) => (
-                <SearchResult key={c.id} uri={c.np} description={c.description} date={c.date} onClick={this.onResultClick} />
-            ));
+            if (this.state.results.length > 0) {
+                searchresults = this.state.results.map( (c: any) => (
+                    <SearchResult key={c.id} uri={c.np} description={c.description} date={c.date} onClick={this.onResultClick} />
+                ));
+            } else {
+                searchresults = [<span className='jp-DirListing-item'><p>No results</p></span>];
+            }
 
             searcharea = (<ul className="jp-DirListing-content">{searchresults}</ul>);
         }
@@ -202,14 +206,14 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
         let searchentry = null;
         if (this.state.searchtype === 'text') {
             searchentry = (
-                <div className="jp-select-wrapper">
+                <div className="p-Widget jp-DirListing">
                     Text
                     <input type="search" id="searchtextentry" name="searchtextentry" onChange={this.onSearchTextEntry} value={this.state.searchtext} />
                 </div>
             );
         } else if (this.state.searchtype === 'pattern') {
             searchentry = (
-                <div className="jp-select-wrapper">
+                <div className="p-Widget jp-DirListing">
                     Subject
                     <input type="search" id="searchsubjentry" name="searchsubjentry" onChange={this.onSearchSubjEntry} value={this.state.searchsubj} />
                     Predicate
@@ -220,7 +224,7 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
             );
         } else if (this.state.searchtype === 'things') {
             searchentry = (
-                <div className="jp-select-wrapper">
+                <div className="p-Widget jp-DirListing">
                     Thing
                     <input type="search" id="searchthingentry" name="searchthingentry" onChange={this.onSearchThingEntry} value={this.state.searchthing} />
                 </div>
