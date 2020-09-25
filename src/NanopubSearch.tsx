@@ -16,16 +16,20 @@ interface ISearchResultProps {
  * function specified via the ISearchResultProps.
  */
 export class SearchResult extends React.Component<ISearchResultProps, {}> {
+
     onClick = (): void => {
         this.props.onClick(this.props.uri);
     }
+
     render(): React.ReactElement {
         return (
             <li key={this.props.uri} title={this.props.uri}>
-                <span className='jp-DirListing-item' onClick={this.onClick}>
-                    <p>{this.props.description}</p>
-                    <p>{this.props.date}</p>
-                </span>
+                <div className='jp-DirListing-item' onClick={this.onClick}>
+                    <div>
+                        <p>{this.props.description}</p>
+                        <p>{this.props.date}</p>
+                    </div>
+                </div>
             </li>
         );
     }
