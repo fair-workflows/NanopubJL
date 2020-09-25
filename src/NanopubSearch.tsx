@@ -200,11 +200,11 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
                 searchresults = this.state.results.map( (c: any) => (
                     <SearchResult key={c.id} uri={c.np} description={c.description} date={c.date} onClick={this.onResultClick} />
                 ));
+                searcharea = (<ul className="jp-DirListing-content">{searchresults}</ul>);
             } else {
-                searchresults = [<span className='jp-DirListing-item'><p>No results</p></span>];
+                searcharea = (<ul className="jp-DirListing-content"><span className='jp-DirListing-item'><p>No results</p></span></ul>);
             }
 
-            searcharea = (<ul className="jp-DirListing-content">{searchresults}</ul>);
         }
 
         let searchentry = null;
