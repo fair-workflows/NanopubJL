@@ -2,7 +2,8 @@
 
 ![Github Actions Status](https://github.com/fair-workflows/NanopubJL/workflows/Build/badge.svg)
 
-A Jupyterlab extension for searching and publishing Nanopublications from a python notebook.
+
+A Jupyterlab extension for searching, fetching and publishing Nanopublications from a python notebook. Uses the [nanopub](https://github.com/fair-workflows/nanopub) python library.
 
 ![screenshot](https://github.com/fair-workflows/NanopubJL/blob/master/nanopubJLexample.gif "Screenshot")
 
