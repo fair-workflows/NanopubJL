@@ -83,7 +83,7 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
     onResultClick = (uri: string): void => {
         console.log('User selected:', uri);
 
-        const code = 'from fairworkflows import Nanopub\nnp = Nanopub.fetch(\'' + uri + '\')\nprint(np)';
+        const code = 'from nanopub import NanopubClient\nnpclient = NanopubClient()\nnp = npclient.fetch(\'' + uri + '\')\nprint(np)';
         this.props.injectCode(code);
     }
 

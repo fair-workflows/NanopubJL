@@ -7,32 +7,34 @@ import tornado
 
 from urllib.parse import urldefrag
 
-import fairworkflows
+from nanopub import NanopubClient
 
 class NanopubSearchHandler(APIHandler):
 
     @tornado.web.authenticated
     def get(self):
 
+        client = NanopubClient()
+
         type_of_search = self.get_argument('type_of_search')
 
         if type_of_search == 'text':
             search_str = self.get_argument('search_str')
             print('Searching for', search_str)
-            results = fairworkflows.Nanopub.search_text(search_str)
+            results = client.search_text(search_str)
         elif type_of_search == 'pattern':
             subj = self.get_argument('subj')
             pred = self.get_argument('pred')
             obj = self.get_argument('obj')
             print('Searching for pattern', subj, pred, obj)
-            results = fairworkflows.Nanopub.search_pattern(subj=subj, pred=pred, obj=obj)
+            results = client.search_pattern(subj=subj, pred=pred, obj=obj)
         elif type_of_search == 'things':
             thing_type = self.get_argument('thing_type')
             searchterm = self.get_argument('searchterm')
             print('Searching for "thing"', thing_type, searchterm)
             if not searchterm:
                 searchterm = ' '
-            results = fairworkflows.Nanopub.search_things(thing_type=thing_type, searchterm=searchterm)
+            results = client.search_things(thing_type=thing_type, searchterm=searchterm)
         else:
             raise ValueError(f'Unrecognized type_of_search, {type_of_search}')
 
