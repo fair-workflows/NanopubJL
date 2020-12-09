@@ -2,6 +2,7 @@ import * as React from 'react';
 
 /** Properties of the NanopubProfileManager component */
 interface INanopubProfileManagerProps {
+    message: string;
 }
 
 /** State of the NanopubProfileManager component */

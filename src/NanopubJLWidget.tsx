@@ -33,7 +33,7 @@ export class NanopubJLWidget extends Widget {
         ReactDOM.render(
             <div>
                 <NanopubSearch injectCode={this.injectCode} />
-                <NanopubProfileManager />
+                <NanopubProfileManager message={'test'} />
             </div>, this.node);
     }
 
