@@ -69,10 +69,10 @@ export class NanopubSearch extends React.Component<INanopubSearchProps, INanopub
             searchsubj: '',
             searchpred: '',
             searchobj: '',
-            loading: false, 
+            loading: false,
             results: []
         };
-        
+
         this.debounced_search = debounce(this.search, 500);
     }
 

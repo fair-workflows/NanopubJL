@@ -5,6 +5,9 @@ import { showErrorMessage } from '@jupyterlab/apputils';
 import { INotebookTracker, NotebookActions } from '@jupyterlab/notebook';
 import { CodeCellModel } from '@jupyterlab/cells';
 import { NanopubSearch } from './NanopubSearch'
+import { NanopubProfileManager } from './NanopubProfileManager'
+
+// setup_profile --orcid_id 'https://orcid.org/0000-0000-0000-0000' --no-publish --name 'test'
 
 /**
  * Widget that lives in the left side bar of Jupyter Lab.
@@ -30,7 +33,8 @@ export class NanopubJLWidget extends Widget {
         ReactDOM.render(
             <div>
                 <NanopubSearch injectCode={this.injectCode} />
-            </div>, this.node);        
+                <NanopubProfileManager />
+            </div>, this.node);
     }
 
     injectCode = (injectStr: string): void => {
