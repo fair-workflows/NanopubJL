@@ -34,7 +34,7 @@ class NanopubSearchHandler(APIHandler):
             print('Searching for "thing"', thing_type, searchterm)
             if not searchterm:
                 searchterm = ' '
-            results = client.find_things(thing_type=thing_type, searchterm=searchterm)
+            results = client.find_things(thing_type, searchterm=searchterm)
         else:
             raise ValueError(f'Unrecognized type_of_search, {type_of_search}')
 
