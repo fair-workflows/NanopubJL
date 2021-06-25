@@ -22,4 +22,4 @@ docker-compose up
 
 ## Requirements
 
-* JupyterLab >= 2.0
+* JupyterLab >= 3.0
