@@ -3,8 +3,7 @@
 ![Github Actions Status](https://github.com/fair-workflows/NanopubJL/workflows/Build/badge.svg)
 [![DOI](https://zenodo.org/badge/273529669.svg)](https://zenodo.org/badge/latestdoi/273529669)
 [![RSD](https://img.shields.io/badge/RSD-NanopubJL-blue)](https://research-software.nl/software/nanopubjl)
-[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8F%20%20%E2%97%8B-orange)](https://fair-software.eu)
-
+[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B-yellow)](https://fair-software.eu)
 
 A Jupyterlab extension for searching, fetching and publishing Nanopublications from a python notebook. Uses the [nanopub](https://github.com/fair-workflows/nanopub) python library.
 
