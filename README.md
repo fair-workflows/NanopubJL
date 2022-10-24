@@ -99,7 +99,7 @@ jupyter lab --watch
 
 ```bash
 
-pip uninstall FNanopubJL
+pip uninstall NanopubJL
 
 jupyter labextension uninstall NanopubJL
 ```
