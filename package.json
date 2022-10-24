@@ -46,7 +46,7 @@
     "react": "~17.0.1",
     "react-dom": "~17.0.1",
     "ts-debounce": "^2.0.1",
-    "playwright": "~1.16.1"
+    "playwright": "~1.9.2"
   },
   "devDependencies": {
     "@types/react-dom": "^16.9.8",
